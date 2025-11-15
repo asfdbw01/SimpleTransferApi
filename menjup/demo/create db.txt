@@ -1,0 +1,35 @@
+create database transfer_app
+	DEFAULT CHARACTER SET utf8mb4;
+
+create table users (
+	user_id varchar(20) primary key,
+	name varchar(40) not null);
+
+
+
+create table accounts (
+    	user_id varchar(20) not null,
+	balance decimal(15,2) not null ,
+   	primary key(user_id),
+   	constraint fk_account_user
+     	foreign key (user_id) references users(user_id)
+     	on update cascade on delete restrict);
+
+
+create table transfers (
+	transfer_id bigint not null Auto_increment , 
+	from_user_id varchar(20) not  null,
+	to_user_id varchar(20) not null,
+	amount decimal(15,2) not null,
+	event_time timestamp not null,
+	primary key (transfer_id) ,
+	constraint fk_transfers_from foreign key
+	(from_user_id) references users (user_id)
+	on update cascade on delete restrict,
+	constraint fk_transfers_to foreign key
+	(to_user_id) references users(user_id)
+	on update cascade on delete restrict);
+
+create index idx_tf_from on transfers (from_user_id, transfer_id);
+create index idx_tf_to on transfers (to_user_id, transfer_id);
+
